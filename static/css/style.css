@@ -1,0 +1,343 @@
+/* Base Styles */
+:root {
+  --primary-color: #2563eb;
+  --secondary-color: #1e40af;
+  --accent-color: #3b82f6;
+  --text-color: #1f2937;
+  --light-gray: #f3f4f6;
+  --medium-gray: #e5e7eb;
+  --dark-gray: #6b7280;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: #f9fafb;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header Styles */
+.header {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  color: var(--primary-color);
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Filter Section */
+.filters {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filter-group {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: var(--dark-gray);
+}
+
+.filter-group input, .filter-group select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--medium-gray);
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.filter-group button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.filter-group button:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Insights Card */
+.insights-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.insights-card h2 {
+  color: var(--primary-color);
+  margin-top: 0;
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--medium-gray);
+  padding-bottom: 0.5rem;
+}
+
+.insights-text {
+  background-color: var(--light-gray);
+  padding: 1rem;
+  border-radius: 4px;
+  border-left: 4px solid var(--accent-color);
+}
+
+/* Chart Container */
+.chart-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container h2 {
+  color: var(--primary-color);
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+/* Routes Table */
+.routes-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.routes-table th, .routes-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--medium-gray);
+}
+
+.routes-table th {
+  background-color: var(--light-gray);
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.routes-table tr:hover {
+  background-color: var(--light-gray);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+  
+  .filter-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .chart-container {
+    padding: 1rem;
+  }
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+.mt-5 { margin-top: 2rem; }
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mb-5 { margin-bottom: 2rem; }
+
+/* Loading State */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.loading-spinner {
+  border: 4px solid var(--light-gray);
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.error-message {
+  color: var(--error-color);
+  background-color: #fee2e2;
+  padding: 1rem;
+  border-radius: 4px;
+  border-left: 4px solid var(--error-color);
+}
+
+
+/* Error Page */
+.error-container {
+    background: #fff5f5;
+    border-left: 4px solid #ef4444;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-radius: 4px;
+}
+
+.error-message {
+    color: #dc2626;
+    font-size: 1.1rem;
+    margin: 1rem 0;
+}
+
+.error-details {
+    color: #6b7280;
+    margin-top: 1.5rem;
+}
+
+.error-details ul {
+    margin: 0.5rem 0 1rem 1rem;
+}
+
+
+.no-price {
+    color: #6b7280;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+.refresh-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #3b82f6;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+.refresh-button:hover {
+    background-color: #2563eb;
+}
+
+/* Status Indicators */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    margin-right: 10px;
+}
+
+.status-badge.live {
+    background-color: #10b981;
+}
+
+.status-badge.warning {
+    background-color: #f59e0b;
+}
+
+/* No Data States */
+.no-data {
+    padding: 20px;
+    background: #f3f4f6;
+    border-radius: 4px;
+    color: #6b7280;
+}
+
+.no-data ul {
+    margin: 10px 0 0 20px;
+}
+
+.no-price-warning {
+    color: #d97706;
+    font-style: italic;
+    margin-top: 15px;
+}
+
+.data-status {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+}
+
+
+
+.charts-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+body.loading::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,0.7);
+    z-index: 9999;
+}
+
+body.loading::before {
+    content: "Loading...";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    background: #3b82f6;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+.status-badge.error {
+    background: #ef4444;
+}

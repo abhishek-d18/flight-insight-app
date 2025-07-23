@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error - Airline Insights</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>✈️ Airline Travel Insights</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="error-container">
+            <h2>⚠️ Service Temporarily Unavailable</h2>
+            <div class="error-message">
+                {{ message }}
+            </div>
+            <p>Last updated: {{ now }}</p>
+            <a href="/" class="refresh-button">Try Again</a>
+        </div>
+    </div>
+</body>
+</html>

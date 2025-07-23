@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airline Travel Insights</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>✈️ Airline Travel Insights</h1>
+            <div id="data-status" class="data-status">
+                <span class="status-badge">LOADING...</span>
+                <span id="update-time"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Filters Section -->
+        <div class="filters">
+            <h2>Filters</h2>
+            <div class="filter-group">
+                <label for="start-date">From:</label>
+                <input type="date" id="start-date" value="{{ today }}">
+                
+                <label for="end-date">To:</label>
+                <input type="date" id="end-date" value="{{ next_week }}">
+                
+                <label for="airline">Airline:</label>
+                <select id="airline">
+                    <option value="all">All Airlines</option>
+                    <option value="American">American</option>
+                    <option value="Delta">Delta</option>
+                    <option value="United">United</option>
+                </select>
+                
+                <button onclick="loadData()">Apply Filters</button>
+            </div>
+        </div>
+
+        <!-- Insights Section -->
+        <div class="insights-card">
+            <h2>Key Insights</h2>
+            <div id="insights-text" class="insights-text">
+                Loading flight data...
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-container">
+            <div class="chart-container">
+                <h2>Price Trends</h2>
+                <canvas id="priceChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>Demand Trends</h2>
+                <canvas id="demandChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Popular Routes Table -->
+        <div class="insights-card">
+            <h2>Popular Routes</h2>
+            <div class="table-container">
+                <table id="routes-table" class="routes-table">
+                    <thead>
+                        <tr>
+                            <th>Route</th>
+                            <th>Flights</th>
+                            <th>Avg Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">Loading data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global chart references
+        let priceChart, demandChart;
+        
+        // Initial load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+        });
+
+        function loadData() {
+            showLoading();
+            
+            const filters = {
+                start_date: document.getElementById('start-date').value,
+                end_date: document.getElementById('end-date').value,
+                airline: document.getElementById('airline').value
+            };
+            
+            axios.post('/get_flight_data', filters)
+                .then(response => {
+                    if (response.data.success) {
+                        updateDashboard(response.data);
+                    } else {
+                        showError(response.data.error);
+                    }
+                })
+                .catch(error => {
+                    showError(error.message);
+                })
+                .finally(() => {
+                    hideLoading();
+                });
+        }
+
+        function updateDashboard(data) {
+            // Update insights
+            document.getElementById('insights-text').innerHTML = 
+                data.insights.replace(/\n/g, '<br>');
+            
+            // Update status
+            document.getElementById('data-status').innerHTML = `
+                <span class="status-badge live">${data.data_status}</span>
+                <span id="update-time">Updated: ${new Date().toLocaleString()}</span>
+            `;
+            
+            // Update charts
+            updateChart('priceChart', 'Average Price ($)', 
+                       data.chart_data.price_labels, data.chart_data.price_values);
+            updateChart('demandChart', 'Number of Flights', 
+                       data.chart_data.demand_labels, data.chart_data.demand_values);
+            
+            // Update routes table
+            updateRoutesTable(data.routes);
+        }
+
+        function updateChart(chartId, label, labels, data) {
+            const ctx = document.getElementById(chartId);
+            const config = {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: chartId === 'demandChart' }
+                    }
+                }
+            };
+            
+            // Destroy existing chart if it exists
+            if (chartId === 'priceChart' && priceChart) {
+                priceChart.destroy();
+            } else if (demandChart) {
+                demandChart.destroy();
+            }
+            
+            // Create new chart
+            if (chartId === 'priceChart') {
+                priceChart = new Chart(ctx, config);
+            } else {
+                demandChart = new Chart(ctx, config);
+            }
+        }
+
+        function updateRoutesTable(routes) {
+            const tbody = document.querySelector('#routes-table tbody');
+            if (routes && routes.length > 0) {
+                tbody.innerHTML = routes.map(route => `
+                    <tr>
+                        <td>${route.route}</td>
+                        <td>${route.count}</td>
+                        <td>${route.price}</td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="no-data">No route data available</td>
+                    </tr>
+                `;
+            }
+        }
+
+        function showLoading() {
+            document.body.classList.add('loading');
+        }
+
+        function hideLoading() {
+            document.body.classList.remove('loading');
+        }
+
+        function showError(message) {
+            document.getElementById('insights-text').innerHTML = `
+                <div class="error-message">${message}</div>
+                <p>Please try again later or check your filters.</p>
+            `;
+            document.getElementById('data-status').innerHTML = `
+                <span class="status-badge error">ERROR</span>
+                <span id="update-time">${new Date().toLocaleString()}</span>
+            `;
+        }
+    </script>
+</body>
+</html>
